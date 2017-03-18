@@ -11,9 +11,15 @@ object EmptyIterableMapAsync {
 
   def modEmpty(n: Long): Task[List[Long]] = {
     if (n % 2 == 0) {
-      Task.now(List())
+      Task {
+        Thread.sleep(500)
+        List()
+      }
     } else {
-      Task.now(List(n, n))
+      Task {
+        Thread.sleep(500)
+        List(n, n)
+      }
     }
   }
 
