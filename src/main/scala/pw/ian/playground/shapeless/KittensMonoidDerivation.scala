@@ -17,7 +17,7 @@ object KittensMonoidDerivation {
 
   case class All(wrappers: Seq[Wrapper])
 
-  implicit val momentsMonoid: Monoid[Moments] = Monoid[Moments]
+  implicit val momentsMonoid = Monoid[Moments]
 
   implicit val wrapperSemi = new Semigroup[Wrapper] {
     def combine(a: Wrapper, b: Wrapper): Wrapper = {
@@ -25,7 +25,7 @@ object KittensMonoidDerivation {
     }
   }
 
-  implicit def sortedSeqMonoid: Monoid[Seq[Wrapper]] = new Monoid[Seq[Wrapper]] {
+  implicit val sortedSeqMonoid = new Monoid[Seq[Wrapper]] {
 
     def combine(a: Seq[Wrapper], b: Seq[Wrapper]): Seq[Wrapper] = {
       val al = a.toList
