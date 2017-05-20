@@ -1,4 +1,4 @@
-package pw.ian.monix_playground
+package pw.ian.playground.monix
 
 import monix.eval.Task
 import monix.execution.Scheduler
