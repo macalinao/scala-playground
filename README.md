@@ -1,6 +1,6 @@
-# monix-playground
+# scala-playground
 
-Random Monix stuff.
+Random Scala stuff.
 
 ## License
 

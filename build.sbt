@@ -1,4 +1,4 @@
-name := "monix-playground"
+name := "playground"
 organization := "pw.ian"
 scalaVersion := "2.12.1"
 
