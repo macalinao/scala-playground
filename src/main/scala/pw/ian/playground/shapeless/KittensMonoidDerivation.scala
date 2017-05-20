@@ -25,7 +25,7 @@ object KittensMonoidDerivation {
     }
   }
 
-  implicit def sortedSeqMonoid[Wrapper]: Monoid[Seq[Wrapper]] = new Monoid[Seq[Wrapper]] {
+  implicit def sortedSeqMonoid: Monoid[Seq[Wrapper]] = new Monoid[Seq[Wrapper]] {
 
     def combine(a: Seq[Wrapper], b: Seq[Wrapper]): Seq[Wrapper] = {
       val al = a.toList
@@ -59,7 +59,7 @@ object KittensMonoidDerivation {
       ),
     )
 
-    println(a |+| b)
+    println(a |+| b) // throws exception
   }
 
 }
