@@ -8,41 +8,29 @@ import cats.derived._, monoid._, legacy._
 // runMain "pw.ian.playground.shapeless.KittensMonoidDerivation"
 object KittensMonoidDerivation {
 
-  trait MatchSumSeqElement[T] extends Semigroup[T] {
-    def identify(t: T): Any
-  }
-
-  object MatchSumSeqElement {
-
-    def instance[T](id: T => Any)(combineFunc: (T, T) => T): MatchSumSeqElement[T] = new MatchSumSeqElement[T] {
-      def combine(a: T, b: T): T = combineFunc(a, b)
-      def identify(t: T): Any = id(t)
-    }
-
-  }
-
   trait Dragon
   case object Infernal extends Dragon
 
   case class Moments(ct: Int, sum: Int, sumSq: Int)
 
-  case class Wrappa(id: Dragon, data: Option[Moments])
+  case class Wrapper(dragon: Dragon, data: Option[Moments])
 
-  case class All(wrappas: Seq[Wrappa])
+  case class All(wrappers: Seq[Wrapper])
 
   implicit val momentsMonoid: Monoid[Moments] = Monoid[Moments]
 
-  implicit val wrappaElt =
-    MatchSumSeqElement.instance[Wrappa](_.id) { (a, b) =>
+  implicit val wrapperSemi = new Semigroup[Wrapper] {
+    def combine(a: Wrapper, b: Wrapper): Wrapper = {
       a.copy(data = a.data |+| b.data)
     }
+  }
 
-  implicit def sortedSeqMonoid[T](implicit mse: MatchSumSeqElement[T]): Monoid[Seq[T]] = new Monoid[Seq[T]] {
+  implicit def sortedSeqMonoid[Wrapper]: Monoid[Seq[Wrapper]] = new Monoid[Seq[Wrapper]] {
 
-    def combine(a: Seq[T], b: Seq[T]): Seq[T] = {
+    def combine(a: Seq[Wrapper], b: Seq[Wrapper]): Seq[Wrapper] = {
       val al = a.toList
       val bl = b.toList
-      val groups = al.groupBy(mse.identify) |+| bl.groupBy(mse.identify)
+      val groups = al.groupBy(_.dragon) |+| bl.groupBy(_.dragon)
       groups
         .mapValues(x => NonEmptyList.fromList(x).map(_.reduce))
         .values.flatten.toList
@@ -55,17 +43,17 @@ object KittensMonoidDerivation {
   def main(args: Array[String]): Unit = {
 
     val a = All(
-      wrappas = Seq(
-        Wrappa(
-          id = Infernal,
+      wrappers = Seq(
+        Wrapper(
+          dragon = Infernal,
           data = Moments(1, 2, 3).some,
         ),
       ),
     )
     val b = All(
-      wrappas = Seq(
-        Wrappa(
-          id = Infernal,
+      wrappers = Seq(
+        Wrapper(
+          dragon = Infernal,
           data = Moments(4, 5, 6).some,
         ),
       ),
