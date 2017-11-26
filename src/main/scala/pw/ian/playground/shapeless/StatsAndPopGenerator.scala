@@ -78,12 +78,15 @@ object StatsAndPopGenerator {
     a: Option[Population],
   )
 
-  implicit val scgen = Generic[ScM]
+  implicit val mgen = Generic[ScM]
   implicit val cgen = Generic[ScS]
   implicit val pgen = Generic[ScP]
 
   val acsdGenerator: StatsAndPopGenerator[
     ScM, ScS, ScP,
-  ] = genericGenerator
+  ] = genericGenerator(
+    mgen, cgen, pgen,
+    hlistGenerator[mgen.Repr, cgen.Repr, pgen.Repr],
+  )
 
 }
