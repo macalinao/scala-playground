@@ -25,8 +25,8 @@ object StatsAndPopGenerator {
     }
   }
 
-  implicit val hnilGenerator: StatsAndPopGenerator[HNil, HNil, HNil] =
-    apply(_ => (HNil, HNil))
+  implicit val hnilGenerator: StatsAndPopGenerator[HNil, Map[Int, HNil], HNil] =
+    apply(_ => (Map(), HNil))
 
 
   implicit def hlistGenerator[
