@@ -55,13 +55,15 @@ object StatsAndPopGenerator {
     implicit genm: Generic.Aux[MG, M],
     gens: Generic.Aux[SG, S],
     genp: Generic.Aux[PG, P],
-    generator: StatsAndPopGenerator[M, S, P],
+    generator: StatsAndPopGenerator[M, Map[Int, S], P],
   ): StatsAndPopGenerator[
-    MG, SG, PG,
+    MG, Map[Int, SG], PG,
   ] = apply { m =>
     val (statsL, popL) = generator.generate(genm.to(m))
     (
-      gens.from(statsL),
+      statsL.mapValues { statsGen =>
+        gens.from(statsGen)
+      },
       genp.from(popL),
     )
   }
@@ -83,10 +85,7 @@ object StatsAndPopGenerator {
   implicit val pgen = Generic[ScP]
 
   val acsdGenerator: StatsAndPopGenerator[
-    ScM, ScS, ScP,
-  ] = genericGenerator(
-    mgen, cgen, pgen,
-    hlistGenerator[mgen.Repr, cgen.Repr, pgen.Repr],
-  )
+    ScM, Map[Int, ScS], ScP,
+  ] = genericGenerator
 
 }
