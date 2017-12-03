@@ -36,15 +36,13 @@ object GenericStuff {
   def genericDeriver[G, Repr <: HList](
     implicit generic: LabelledGeneric.Aux[G, Repr],
     deriver: Thingie[Repr],
-    ): Thingie[G] = cinst { obj =>
-    hlistDeriver.derive(generic.to(obj))
+  ): Thingie[G] = cinst { obj =>
+    deriver.derive(generic.to(obj))
   }
 
 
   def main(args: Array[String]): Unit = {
-    val bookGen = LabelledGeneric[Book]
-    val tapl = Book("Benjamin Pierce", "Types and Programming Languages", 262162091, 44.11)
-    val rec = bookGen.to(tapl)
+    val deriver: Thingie[Book] = genericDeriver
   }
 
 }
